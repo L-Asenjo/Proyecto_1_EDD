@@ -3,8 +3,8 @@ public class Route {
     private int size;
     private RouteNode head, tail;
 
-    public Route(int size, RouteNode head, RouteNode tail) {
-        this.size = size;
+    public Route() {
+        this.size = 0;
         this.head = this.tail = null;
     }
 
