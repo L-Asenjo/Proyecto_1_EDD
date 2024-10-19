@@ -1,0 +1,76 @@
+{
+   "Metro de Caracas":[
+      {
+         "Linea 1":[
+            "Propatria",
+            "Perez Bonalde",
+            "Plaza Sucre",
+            "Gato Negro",
+            "Agua Salud",
+            "Canno Amarillo",
+            {"Capitolio":"El Silencio"},
+            "La Hoyada",
+            "Parque Carabobo",
+            "Bellas Artes",
+            "Colegio de Ingenieros",
+            {"Plaza Venezuela":"Zona Rental"},
+            "Sabana Grande",
+            "Chacaito",
+            "Chacao",
+            "Altamira",
+            "Miranda",
+            "Los Dos Caminos",
+            "Los Cortijos",
+            "La California",
+            "Petare",
+            "Palo Verde"
+         ]
+      },
+      {
+         "Linea 2":[
+            {"El Silencio":"Capitolio"},
+            "Capuchinos",
+            "Maternidad",
+            "Artigas",
+            "La Paz",
+            "La Yaguara",
+            "Carapita",
+            "Antimano",
+            "Mamera",
+            "Caricuao",
+            "Zoologico"
+         ]
+      },
+      {
+         "Linea 3":[
+            {"Plaza Venezuela":"Zona Rental"},
+            "Ciudad Universitaria",
+            "Los Simbolos",
+            "La Bandera",
+            "El Valle",
+            "Los Jardines",
+            "Coche",
+            "Mercado",
+            {"La Rinconada":"Caracas"}
+         ]
+      },
+      {
+         "Linea 4":[
+            "Las Adjuntas",
+            "Ruiz Pineda",
+            "Mamera",
+            "Antimano",
+            "Carapita",
+            "La Yaguara",
+            "La Paz",
+            "Maternidad",
+            "Capuchinos",
+            "Teatros",
+            "Nuevo Circo",
+            "Parque Central",
+            {"Zona Rental":"Plaza Venezuela"},
+            "Bello Monte"
+         ]
+      }
+   ]
+}
