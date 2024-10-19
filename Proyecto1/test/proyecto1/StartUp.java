@@ -1,3 +1,5 @@
+package proyecto1;
+
 
 import javax.swing.JFileChooser;
 
