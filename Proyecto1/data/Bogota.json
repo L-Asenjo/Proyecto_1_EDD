@@ -1,0 +1,198 @@
+{
+   "Transmilenio":[
+      {
+         "Av. Caracas":[
+            "Terminal",
+            "Calle 187",
+            "Portal del Norte",
+            "Toberin",
+            "Cardio Infantil",
+            "Mazuren",
+            "Calle 146",
+            "Calle 142",
+            "Alcala",
+            "Prado",
+            "Calle 127",
+            "Pepe Sierra",
+            "Calle 106",
+            "Calle 100",
+            "Virrey",
+            "Calle 85",
+            "Heroes",
+            "Calle 76",
+            "Calle 72",
+            "Flores",
+            "Calle 63",
+            "Calle 57",
+            "Marty",
+            "Calle 452",
+            "Av. 39",
+            "Profamilia",
+            "Calle 26",
+            "Calle 22",
+            "Calle 19",
+            "Av. Jimenez",
+            "Tercer Milenio",
+            "Bicentenario",
+            "Hospital",
+            "Hortua",
+            "Narinno",
+            "Fucha",
+            "Restrepo",
+            "Olaya",
+            "Quiroga",
+            "Calle 40 Sur",
+            "Santa Lucia",
+            "Socorro",
+            "Consuelo",
+            "Molinos",
+            "Portal de Usme"
+         ]
+      },
+      {
+         "Av. Caracas Sur":[
+            "Santa Lucia",
+            "Biblioteca",
+            "Parque",
+            "Portal del Tunal"
+         ]
+      },
+      {
+         "Av. Suba":[
+            "Portal de Suba",
+            "La Campinna",
+            "Suba TV 91",
+            "21 Angeles",
+            "Gratamira",
+            "Suba Av. Boyaca",
+            "Niza Calle 127",
+            "Humedal Cordoba",
+            "Shaio",
+            "Puentelargo",
+            "Suba Calle 100",
+            "Suba Calle 95",
+            "Rionegro",
+            "San Martin",
+            "NQS Calle 75",
+            "Av. Chile",
+            "Simon Bolivar",
+            "Coliseo",
+            "Campin U Antonio Narinno",
+            "U Nacional",
+            "Av. El Dorado",
+            "CAD",
+            "Paloquemao",
+            "Ricaurte",
+            "Comuneros",
+            "Guatoque Veraguas",
+            "Tygua San Jose",
+            "Bicentenario"
+         ]
+      },
+      {
+         "NQS Central":[
+            "Calle 100",
+            "La Castellana",
+            "NQS Calle 75",
+            "Esc. Militar"
+         ]
+      },
+      {
+         "Calle 80":[
+            "Portal de la 80",
+            "Quirigua",
+            "Carrera 90",
+            "Avenida Cali",
+            "Granja Carrera 77",
+            "Minuto de Dios",
+            "Boyaca",
+            "Ferias",
+            "Avenida 68",
+            "Carrera 53",
+            "Carrera 47",
+            "Esc. Militar",
+            "Polo",
+            "Heroes"
+         ]
+      },
+      {
+         "Av. Las Americas":[
+            "Portal de las Americas",
+            "Patio Bonito",
+            "Biblioteca Tintal",
+            "Transversal 86",
+            "Mandalay",
+            "Mundo Aventura",
+            "Marsella",
+            "Pradera",
+            "Americas Carrera 53A",
+            "Puente Aranda",
+            "Carrera 43",
+            "Zona Industrial",
+            "CDS Carrera 32",
+            "Ricaurte",
+            "San Facson Carrera 22",
+            "De la Sabana",
+            "Av Jimenez",
+            "San Victorino",
+            "Museo del Oro",
+            {"Las Aguas":"Universidades"}
+         ]
+      },
+      {
+         "Calle 26":[
+            {"Universidades":"Las Aguas"},
+            "Calle 26",
+            "Centro Memoria",
+            "Plaza de la Democracia",
+            "Ciudad Universitaria",
+            "Corferias",
+            "Quinta Paredes",
+            "Gobernación",
+            "CAN",
+            "Salitre El Greco",
+            "El Tiempo Maloka",
+            "Av Rojas",
+            "Normandia",
+            "Modelia",
+            "Portal el Dorado"
+         ]
+      },
+      {
+         "Av. NQS Sur":[
+            "Comuneros",
+            "Santa Isabel",
+            "SENA",
+            "NQS Calle 30 Sur",
+            "NQS Calle 38 A Sur",
+            "General Santander",
+            "Alqueria",
+            "Venecia",
+            "Sevillana",
+            "Magdalena",
+            "Perdomo",
+            "Portal del Sur",
+            "Bosa",
+            "La Despensa",
+            "Leon XIII",
+            "Terreros Hospital C.V.",
+            "San Mateo"
+         ]
+      },
+      {
+         "Carrera 10":[
+            "Portal 20 de Julio",
+            "Country Sur",
+            "Av. 1ro de Mayo",
+            "Ciudad Jardin UAN",
+            "Policarpa",
+            "Hospitales",
+            "Bicentenario",
+            "San Victorino",
+            "Las Nieves",
+            "San Diego",
+            "Museo Nacional"
+         ]
+      }
+   ]
+}
