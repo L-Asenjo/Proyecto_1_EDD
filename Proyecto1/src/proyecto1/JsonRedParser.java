@@ -87,7 +87,7 @@ public class JsonRedParser implements IRedParser {
      * Quita todos los caracteres no deseados del string json.
      */
     void stripTotal() {
-        this.json = this.json.strip().replace("\r", "").replace("\n", "").replace("\"", "");
+        this.json = this.json.strip().replace("\r", "").replace("\n", "").replace("\"", "").strip();
     }
 
     /**
@@ -95,10 +95,10 @@ public class JsonRedParser implements IRedParser {
      */
     void obtenerRed() {
         // Quitando la primera y ultima llaves.
-        this.json = json.substring(1, this.json.length() - 1);
+        this.json = json.substring(1, this.json.length() - 1).strip();
         String[] aux = this.json.split(":", 2);
         this.nombreRed = aux[0].strip();
-        this.json = aux[1].substring(1, aux[1].length() - 1);
+        this.json = aux[1].substring(1, aux[1].length() - 1).strip();
     }
 
     /**
@@ -111,14 +111,21 @@ public class JsonRedParser implements IRedParser {
             char c = this.json.charAt(i);
             if (c == '{') {
                 numLlavesAbiertas++;
-                if (numLlavesAbiertas == 1) {
-                    continue;
-                }
+                continue;
+            }
+            if (c == '[') {
+                continue;
+            }
+            if (c == ']') {
+                continue;
             }
             if (c == '}') {
                 numLlavesAbiertas--;
                 if (numLlavesAbiertas == 0) {
                     jsonAux += "\n";
+                    continue;
+                }
+                if (numLlavesAbiertas == 1) {
                     continue;
                 }
             }
@@ -129,7 +136,7 @@ public class JsonRedParser implements IRedParser {
             }
             jsonAux += String.valueOf(c);
         }
-        this.json = jsonAux;
+        this.json = jsonAux.strip();
     }
 
     /**
@@ -143,7 +150,7 @@ public class JsonRedParser implements IRedParser {
             String linea = lineas[i];
             String[] aux = linea.split(":", 2);
             this.nombresLineas[i] = aux[0].strip();
-            String paradas = aux[1].substring(1, aux[1].length() - 1);
+            String paradas = aux[1].strip();
             this.nombresParadas[i] = paradas.split(",");
             for (int j = 0; j < this.nombresParadas[i].length; j++) {
                 this.nombresParadas[i][j] = this.nombresParadas[i][j].strip();
