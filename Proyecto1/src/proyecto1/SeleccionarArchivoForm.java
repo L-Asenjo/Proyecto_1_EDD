@@ -70,12 +70,13 @@ public class SeleccionarArchivoForm extends javax.swing.JFrame {
         File selectedFile = pnSeleccionarArchivo.getSelectedFile();
         if (selectedFile == null){
             dispose();
+            menuPrincipalForm.setVisible(true);
             return;
         }
         mainClass.nombreArchivo = selectedFile.getAbsolutePath();
         dispose();
-        MostrarArchivo mostrarArchivo = new MostrarArchivo(mainClass, menuPrincipalForm);
-        mostrarArchivo.setVisible(true);
+        MainMenu mainmenu = new MainMenu(mainClass, menuPrincipalForm);
+        mainmenu.setVisible(true);
         return;
     }//GEN-LAST:event_pnSeleccionarArchivoActionPerformed
 
