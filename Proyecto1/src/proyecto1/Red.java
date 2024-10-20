@@ -319,8 +319,7 @@ public class Red extends ArrayList<Linea> implements IRed {
             Linea linea = new Linea(nombresLineas[i]);
             for (int j = 0; j < nombresParadas[i].length; j++) {
                 if (nombresParadas[i][j].contains(":")) {
-                    String nombreParada = nombresParadas[i][j].substring(1,
-                            nombresParadas[i][j].length() - 1);
+                    String nombreParada = nombresParadas[i][j].strip();
                     String[] aux = nombreParada.split(":");
                     Parada parada = new Parada(aux[0].strip(), aux[1].strip());
                     linea.agregar(parada);
@@ -364,10 +363,16 @@ public class Red extends ArrayList<Linea> implements IRed {
      * Solo un main para probar cosas.
      */
     public static void main(String[] args) {
-        Red red = new Red(".\\data\\Caracas.json");
-        // Red red = new Red(".\\data\\Bogota.json");
+        // Red red = new Red(".\\data\\Caracas.json");
+        Red red = new Red(".\\data\\Bogota.json");
         red.cargarArchivo();
-        System.out.println(red.toString());
+        // System.out.println(red.toString());
+
+        for (int i = 0; i < red.size(); i++) {
+            System.out.print(red.get(i).getNombre() + ": ");
+            System.out.println(red.get(i).toString());
+            System.out.println();
+        }
 
     }
 
