@@ -4,12 +4,14 @@
  */
 package proyecto1;
 
+import java.awt.font.NumericShaper.Range;
+
 /**
  * Clase Grafo, para representar un grafo. En el caso del proyecto los vertices
  * son paradas o estaciones de una linea de transporte.
  */
 public class Grafo {
-
+    private final int MAX_NUM_SOLUCIONES = 15;
     /**
      * La lista de vertices
      */
@@ -269,7 +271,7 @@ public class Grafo {
      * @param nombre el nombre de la sucursal
      * @return true si se elimino o false si no existe
      */
-    public boolean eliminarSucursal(String nombre) {
+    public boolean removerSucursal(String nombre) {
         if (vertices.vacia()) {
             return false;
         }
@@ -298,7 +300,7 @@ public class Grafo {
     }
 
     /**
-     * Agrega un arreglo de sucursales a la lista de sucursales
+     * Cambia la lista de sucursales
      * 
      * @param sucursales el arreglo de sucursales
      * @return true si se agregaron o false sen caso contrario
@@ -307,6 +309,7 @@ public class Grafo {
         if (vertices.vacia()) {
             return false;
         }
+        this.sucursales.vaciar();
         for (int i = 0; i < sucursales.length; i++) {
             this.agregarSucursal(sucursales[i]);
         }
@@ -596,6 +599,7 @@ public class Grafo {
         if (visitados == null) {
             throw new NullPointerException("El vertice " + vertice.getNombre() + " no tiene adyacentes");
         }
+        vertice.vaciarCobertura();
         for (int i = 0; i < visitados.length; i++) {
             vertice.agregarVisitado(visitados[i]);
         }
@@ -619,6 +623,7 @@ public class Grafo {
             if (visitados == null) {
                 throw new NullPointerException("El vertice " + vertice.getNombre() + " no tiene adyacentes");
             }
+            vertice.vaciarCobertura();
             for (int j = 0; j < visitados.length; j++) {
                 vertice.agregarVisitado(visitados[j]);
             }
@@ -669,83 +674,112 @@ public class Grafo {
     }
 
     /**
-     * Método recursivo que calcula las mejores sucursales. Es privado y es llamado
-     * por recomendar sucursales.
+     * Método recursivo, que calcula las sucursales necesarias para cubrir todos los
+     * vertices. Añade las sucursales a una lista de lista de string.
      * 
-     * @param sucursales  la lista de sucursales
-     * @param verticesSet el conjunto de vertices totales
-     * @return una lista de string con las sucursales
+     * @param sucursales  Las sucursales actuales
+     * @param verticesSet un conjunto con todos los vertices, se calcula solo una
+     *                    vez y se pasa
+     *                    entre llamadas.
+     * @param resultados  La lista de lista de string que contiene los resultados
+     *                    de las surcursales caluladas.
+     * @return Las sucursales que cubren todos los vertices
      */
-    private String[] calcularSucursales(ArrayList<String> sucursales, Set<String> verticesSet) {
 
-        // Verifico que tenga en this.sucursales las sucursales que me pasaron.
+    private void calcularSucursales(ArrayList<String> sucursales, Set<String> verticesSet,
+            ArrayList<ArrayList<String>> resultados) {
+        // Uno de los criterios de salida de la recursion. Si la lista de
+        // sucursales es mayor que MAX_NUM_SOLUCIONES, no hay que seguir.
+        if (resultados.size() > MAX_NUM_SOLUCIONES) {
+            return;
+        }
+        // Tengo que guardar un backup de T ya que lo modifico para calcular las
+        // sucursales que
+        // se encuentran a cierta distancia de las actuales.
+        int tBkup = this.getT();
+
+        // vacío las sucursales y cargo las que me pasaron para calcular la
+        // coberturaTotal.
         this.sucursales.vaciar();
         for (int i = 0; i < sucursales.size(); i++) {
             this.sucursales.agregar(sucursales.get(i));
         }
-
-        // y calculo las coberturas de todos los vertices.
         this.asignarCoberturas();
 
-        // creo un conjunto de nombres de vertices que tienen cobertura.
+        // Creo los conjuntos para verificar si ya tengo la cobertura completa y el
+        // conjunto
+        // de vertices faltantes, lo utilizo para eliminar posibles sucursales, pero que
+        // ya están en la cobertura.
         Set<String> coberturaTotalSet = new Set<>(this.getCoberturaTotal());
-
-        // Les resto el conjunto de vertices totales que me pasaron (me los pasaron)
-        // para no tener que hacer un nuevo conjunto cada vez, ese conjunto no se
-        // modifica.
-        // asi que obtengo los vertices que faltan por cobertura.
         Set<String> verticesFaltantesSet = verticesSet.diferencia(coberturaTotalSet);
 
-        // Este es el caso base de la recursion. Si no tengo vertices faltantes,
-        // devuelvo las sucursales.
+        // Si ya tengo la cobertura total, agrego las sucursales a la lista de
+        // resultados y retorno.
         if (verticesFaltantesSet.vacio()) {
-            String[] aux = new String[sucursales.size()];
-            for (int i = 0; i < aux.length; i++) {
-                aux[i] = sucursales.get(i);
-            }
-            return aux;
+            resultados.agregar(sucursales);
+            return;
         }
 
-        // Tengo que tomar uno por uno, así que lo transformo en un array de strings.
-        ArrayList<String> verticesFaltantesList = verticesFaltantesSet.toList();
+        // Creo un conjunto de posibles sucursales
+        Set<String> posiblesSucursalesSet = new Set<>();
 
-        // Y necesito guardar las sucursales que me devuelven las llamadas a
-        // calcularSucursales.
-        String[][] sucursalesCalculadasArray = new String[verticesFaltantesList.size()][];
+        // Calculo las sucursales que se encuentran a cierta distancia de las actuales.
+        // la distancia es 2*T+1. Si no consigo ninguna, bajo la distancia en 1....
+        // hasta
+        // que consiga posibles sucursales o llegue a una distancia == 0.
+        for (int distanciaMinima = (this.getT() * 2) + 1; posiblesSucursalesSet.vacio()
+                && distanciaMinima > 0; distanciaMinima--) {
 
-        // Voy vertice por vertice faltante, y lo convierto en sucursal, para ver que
-        // pasa!!
-        for (int i = 0; i < verticesFaltantesList.size(); i++) {
+            // voy cambiando la distancia mínima para obtener posibles sucursales.
+            this.setT(distanciaMinima);
+            for (int i = 0; i < sucursales.size(); i++) {
+                Vertice vertice = this.buscarVertice(sucursales.get(i));
+                this.asignarCobertura(sucursales.get(i));
+                Visitado[] visitados = vertice.getCobertura();
+                for (int j = 0; j < visitados.length; j++) {
+                    if (visitados[j].distancia == distanciaMinima) {
+                        // Si no esta en vertices faltantes, es que NO es una sucursal
+                        // válida.
+                        if (!verticesFaltantesSet.contiene(visitados[j].nombre)) {
+                            continue;
+                        }
+                        // si es una sucursal valida, agrego a la lista de posibles
+                        posiblesSucursalesSet.agregar(visitados[j].nombre);
+                    }
+                }
+            }
+        }
+        // retorno T a su valor original
+        this.setT(tBkup);
+        if (posiblesSucursalesSet.vacio()) {
+            // Si no logré nada con todas las distancias... entonces voy a agarrar los
+            // vertices
+            // faltantes uno por uno.
+            posiblesSucursalesSet = verticesFaltantesSet;
+        }
+
+        ArrayList<String> posiblesSucursalesList = posiblesSucursalesSet.toList();
+
+        // Hago la llamada recursiva para cada posible sucursal
+        for (int i = 0; i < posiblesSucursalesList.size(); i++) {
             ArrayList<String> sucursalesRecomendadas = new ArrayList<>(sucursales);
-            // Le agrego a la sucursales, el vertice faltante
-            sucursalesRecomendadas.agregar(verticesFaltantesList.get(i));
-            // veo que me devuelve el método recursivo
-            String[] sucursalesCalculadas = calcularSucursales(sucursalesRecomendadas, verticesSet);
-            // y lo agrego al arreglo, para ver cuantas sucursales me devuelven.
-            sucursalesCalculadasArray[i] = sucursalesCalculadas;
+            sucursalesRecomendadas.agregar(posiblesSucursalesList.get(i));
+            calcularSucursales(sucursalesRecomendadas, verticesSet, resultados);
         }
-
-        // calculo la menor cantidad de sucursales.... y esa es la que devuelvo.
-        Integer min_value = null;
-        Integer min_index = null;
-        for (int i = 0; i < sucursalesCalculadasArray.length; i++) {
-            if (min_value == null || sucursalesCalculadasArray[i].length < min_value) {
-                min_value = sucursalesCalculadasArray[i].length;
-                min_index = i;
-            }
-        }
-        return sucursalesCalculadasArray[min_index];
     }
 
     /**
      * Devuelve un arreglo con las sucursales que se pueden recomendar.
      * 
-     * @return arreglo con las sucursales reco
+     * @return arreglo con las sucursales recomendadas
      */
     public String[] recomendarSucursales() {
 
         // Necesito guardar las sucursales originales para no perderlas
         // y poder volver al estado inicial
+        if (this.sucursales.size() == 0) {
+            return new String[0];
+        }
         ArrayList<String> sucursalesBkup = new ArrayList<>();
         for (int i = 0; i < this.sucursales.size(); i++) {
             sucursalesBkup.agregar(this.sucursales.get(i));
@@ -772,7 +806,10 @@ public class Grafo {
 
         ArrayList<String> sucursalesIniciales = new ArrayList<>(this.sucursales);
         // Hago la llamada al método recursivo que calcula las mejores sucursales
-        String[] sucursalesRecomendadasTotales = this.calcularSucursales(sucursalesIniciales, verticesSet);
+
+        ArrayList<ArrayList<String>> resultados = new ArrayList<>();
+
+        this.calcularSucursales(sucursalesIniciales, verticesSet, resultados);
 
         // Vuelvo a colocar todo como antes de hacer el análisis.
         this.sucursales.vaciar();
@@ -781,10 +818,21 @@ public class Grafo {
         }
         this.asignarCoberturas();
 
+        // Calculo cual es el resultado con menos sucursales y ese es el recomendado.
+
+        Integer minValor = null;
+        Integer minIndex = null;
+        for (int i = 0; i < resultados.size(); i++) {
+            if (minValor == null || resultados.get(i).size() < minValor) {
+                minValor = resultados.get(i).size();
+                minIndex = i;
+            }
+        }
         // Utilizo conjunto para quitar las sucursales actuales a las sucursales
         // recomendadas totales
         // así solo dejo las nuevas.
-        Set<String> sucursalesRecomendadasTotalesSet = new Set<>(sucursalesRecomendadasTotales);
+
+        Set<String> sucursalesRecomendadasTotalesSet = new Set<>(resultados.get(minIndex));
         Set<String> sucursalesActualesSet = new Set<>(this.sucursales);
         Set<String> sucursalesRecomendadasSet = sucursalesRecomendadasTotalesSet.diferencia(sucursalesActualesSet);
 
@@ -886,9 +934,12 @@ public class Grafo {
         // System.out.println("El tipo de la busqueda es:" + busqueda.toString());
         grafo.asignarCoberturas();
         System.out.println(grafo.toString());
-        grafo.setTipoBusqueda(TipoBusqueda.DFS);
-        grafo.agregarSucursal("J");
-        grafo.agregarSucursal("A");
+        grafo.setTipoBusqueda(TipoBusqueda.BFS);
+        grafo.agregarSucursal("E");
+        // grafo.agregarSucursal("A");
+
+        System.out.println("La cantidad de vertices es: " + grafo.vertices.size());
+
         String[] sucursales = grafo.recomendarSucursales();
         System.out.println("Las sucursales recomendadas son: ");
         for (int i = 0; i < sucursales.length; i++) {
