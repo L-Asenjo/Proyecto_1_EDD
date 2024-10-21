@@ -2,7 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package proyecto1;
+package grafo;
+
+import java.awt.Toolkit;
 
 /**
  * Clase que representa una red de transporte. Implementada con ArrayList.
@@ -21,6 +23,8 @@ public class Red extends ArrayList<Linea> implements IRed {
 
     private JsonRedParser jsonRedParser;
 
+    private Grafo grafo;
+
     /**
      * Constructor por defecto.
      */
@@ -28,6 +32,7 @@ public class Red extends ArrayList<Linea> implements IRed {
         this.nombre = null;
         this.datosRedArchivo = new DatosRedArchivo();
         this.jsonRedParser = new JsonRedParser();
+        this.grafo = new Grafo();
     }
 
     /**
@@ -41,6 +46,7 @@ public class Red extends ArrayList<Linea> implements IRed {
         super(1);
         this.datosRedArchivo = new DatosRedArchivo(nombreArchivo);
         this.jsonRedParser = new JsonRedParser();
+        this.grafo = new Grafo();
     }
 
     /**
@@ -80,6 +86,17 @@ public class Red extends ArrayList<Linea> implements IRed {
      */
     public void setNombreArchivo(String nombreArchivo) {
         this.datosRedArchivo.setNombreArchivo(nombreArchivo);
+    }
+
+    /**
+     * Getter del grafo.
+     */
+    public Grafo getGrafo() {
+        return this.grafo;
+    }
+
+    public void setGrafo(Grafo grafo) {
+        this.grafo = grafo;
     }
 
     /**
@@ -344,6 +361,55 @@ public class Red extends ArrayList<Linea> implements IRed {
         return this.cargarArchivo();
     }
 
+    public void cargarGrafo() {
+        this.grafo.vaciar();
+        for (int i = 0; i < this.size(); i++) {
+            String[] nombreParadas = this.get(i).getParadas();
+            for (int j = 0; j < nombreParadas.length; j++) {
+                String[] paradas;
+                String adyacenteAnterior = null;
+                String adyacenteSiguiente = null;
+                if (j > 0) {
+                    if (nombreParadas[j - 1].contains(":")) {
+
+                        adyacenteAnterior = nombreParadas[j - 1].split(":")[0].strip();
+                    } else {
+                        adyacenteAnterior = nombreParadas[j - 1].strip();
+                    }
+                }
+                if (j < nombreParadas.length - 1) {
+                    if (nombreParadas[j + 1].contains(":")) {
+                        adyacenteSiguiente = nombreParadas[j + 1].split(":")[0].strip();
+                    } else {
+                        adyacenteSiguiente = nombreParadas[j + 1].strip();
+                    }
+                }
+                if (nombreParadas[j].contains(":")) {
+                    paradas = nombreParadas[j].split(":");
+                    this.grafo.agregarVertice(paradas[0].strip());
+                    this.grafo.agregarVertice(paradas[1].strip());
+                    this.grafo.agregarAdyacente(paradas[0].strip(), paradas[1].strip(), 0);
+                } else {
+                    paradas = new String[1];
+                    paradas[0] = nombreParadas[j].strip();
+                    this.grafo.agregarVertice(nombreParadas[j].strip());
+                }
+                if (adyacenteAnterior != null) {
+                    this.grafo.agregarVertice(adyacenteAnterior);
+                    this.grafo.agregarAdyacente(paradas[0].strip(), adyacenteAnterior.strip(), 1);
+                }
+                if (adyacenteSiguiente != null) {
+                    this.grafo.agregarVertice(adyacenteSiguiente);
+                    this.grafo.agregarAdyacente(paradas[0].strip(), adyacenteSiguiente.strip(), 1);
+                }
+            }
+        }
+    }
+
+    public String grafoToString() {
+        return this.grafo.toString();
+    }
+
     /**
      * Devuelve el String con una representación de la red.
      */
@@ -368,11 +434,33 @@ public class Red extends ArrayList<Linea> implements IRed {
         red.cargarArchivo();
         // System.out.println(red.toString());
 
-        for (int i = 0; i < red.size(); i++) {
-            System.out.print(red.get(i).getNombre() + ": ");
-            System.out.println(red.get(i).toString());
-            System.out.println();
+        // for (int i = 0; i < red.size(); i++) {
+        // System.out.print(red.get(i).getNombre() + ": ");
+        // System.out.println(red.get(i).toString());
+        // System.out.println();
+        // }
+        red.cargarGrafo();
+        System.out.println(red.grafoToString());
+        System.out.println("El grafo es conexo? " + red.grafo.esConexo());
+        red.grafo.setT(3);
+        red.grafo.agregarSucursal("Propatria");
+
+        System.out.println("El numero de vertices es: " + red.grafo.getVertices().length);
+
+        System.out.print("Las sucursales recomendadas son: ");
+        String[] sucursales = red.grafo.recomendarSucursales(true, true);
+        for (int i = 0; i < 5; i++) {
+            Toolkit.getDefaultToolkit().beep();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+        for (int i = 0; i < sucursales.length; i++) {
+            System.out.print(" " + sucursales[i] + " ");
+        }
+        System.out.println();
 
     }
 
