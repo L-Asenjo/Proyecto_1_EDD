@@ -2,7 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package proyecto1;
+package grafo;
+
+import java.awt.Toolkit;
 
 /**
  * Clase que representa una red de transporte. Implementada con ArrayList.
@@ -353,6 +355,55 @@ public class Red extends ArrayList<Linea> implements IRed {
         return this.cargarArchivo();
     }
 
+    public void cargarGrafo() {
+        this.grafo.vaciar();
+        for (int i = 0; i < this.size(); i++) {
+            String[] nombreParadas = this.get(i).getParadas();
+            for (int j = 0; j < nombreParadas.length; j++) {
+                String[] paradas;
+                String adyacenteAnterior = null;
+                String adyacenteSiguiente = null;
+                if (j > 0) {
+                    if (nombreParadas[j - 1].contains(":")) {
+
+                        adyacenteAnterior = nombreParadas[j - 1].split(":")[0].strip();
+                    } else {
+                        adyacenteAnterior = nombreParadas[j - 1].strip();
+                    }
+                }
+                if (j < nombreParadas.length - 1) {
+                    if (nombreParadas[j + 1].contains(":")) {
+                        adyacenteSiguiente = nombreParadas[j + 1].split(":")[0].strip();
+                    } else {
+                        adyacenteSiguiente = nombreParadas[j + 1].strip();
+                    }
+                }
+                if (nombreParadas[j].contains(":")) {
+                    paradas = nombreParadas[j].split(":");
+                    this.grafo.agregarVertice(paradas[0].strip());
+                    this.grafo.agregarVertice(paradas[1].strip());
+                    this.grafo.agregarAdyacente(paradas[0].strip(), paradas[1].strip(), 0);
+                } else {
+                    paradas = new String[1];
+                    paradas[0] = nombreParadas[j].strip();
+                    this.grafo.agregarVertice(nombreParadas[j].strip());
+                }
+                if (adyacenteAnterior != null) {
+                    this.grafo.agregarVertice(adyacenteAnterior);
+                    this.grafo.agregarAdyacente(paradas[0].strip(), adyacenteAnterior.strip(), 1);
+                }
+                if (adyacenteSiguiente != null) {
+                    this.grafo.agregarVertice(adyacenteSiguiente);
+                    this.grafo.agregarAdyacente(paradas[0].strip(), adyacenteSiguiente.strip(), 1);
+                }
+            }
+        }
+    }
+
+    public String grafoToString() {
+        return this.grafo.toString();
+    }
+
     /**
      * Devuelve el String con una representación de la red.
      */
@@ -516,6 +567,7 @@ public class Red extends ArrayList<Linea> implements IRed {
 
         // System.out.print("Las sucursales recomendadas son: ");
         String[] sucursales = red.grafo.recomendarSucursales();
+
         for (int i = 0; i < sucursales.length; i++) {
             System.out.print(" " + sucursales[i] + " ");
         }
