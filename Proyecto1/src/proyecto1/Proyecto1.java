@@ -7,24 +7,25 @@ package proyecto1;
 import javax.swing.*;
 
 public class Proyecto1 extends JFrame  {
-
-    public String nombreArchivo;
-    public Red red;
+    Red red = new Red();
+    public String nombreArchivo; // esto se puede quitar
+     
     
     public Proyecto1() {
-        red = new Red();
-        MenuPrincipalForm menuPrincipalForm = new MenuPrincipalForm(this);
-        menuPrincipalForm.setVisible(true);
-         new Thread(() -> {
-            while (true){
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e){
-                    e.printStackTrace();
-                }
-                System.out.println("Nombre Archivo: " + nombreArchivo);
-            }
-        }).start();
+        VentanaPrincipal ventanaPrincipal = new VentanaPrincipal(this);
+        ventanaPrincipal.setVisible(true);
+//        MenuPrincipalForm menuPrincipalForm = new MenuPrincipalForm(this);
+//        menuPrincipalForm.setVisible(true);
+//         new Thread(() -> {
+//            while (true){
+//                try {
+//                    Thread.sleep(5000);
+//                } catch (InterruptedException e){
+//                    e.printStackTrace();
+//                }
+//                System.out.println("Nombre Archivo: " + nombreArchivo);
+//            }
+//        }).start();
     }
     /**
      * @param args the command line arguments
