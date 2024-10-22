@@ -18,11 +18,16 @@
         <get src="https://repo1.maven.org/maven2/org/junit/jupiter/junit-jupiter-api/5.11.0/junit-jupiter-api-5.11.0.jar" dest="lib/junit-jupiter-api-5.11.0.jar" skipexisting="true"/>
         <get src="https://repo1.maven.org/maven2/org/junit/jupiter/junit-jupiter-engine/5.11.0/junit-jupiter-engine-5.11.0.jar" dest="lib/junit-jupiter-engine-5.11.0.jar" skipexisting="true"/>
         <get src="https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.11.0/junit-platform-console-standalone-1.11.0.jar" dest="lib/junit-platform-console-standalone-1.11.0.jar" skipexisting="true"/>
+        <get src="https://repo1.maven.org/maven2/org/graphstream/gs-ui-swing/2.0/gs-ui-swing-2.0.jar" dest="lib/gs-ui-swing-2.0.jar" skipexisting="true"/>
+        <get src="https://repo1.maven.org/maven2/org/graphstream/gs-core/2.0/gs-core-2.0.jar" dest="lib/gs-core-2.0.jar" skipexisting="true"/>
+        <get src="https://repo1.maven.org/maven2/org/graphstream/pherd/1.0/pherd-1.0.jar" dest="lib/pherd-1.0.jar" skipexisting="true"/>
     </target>
 
     <target name="compile" depends="init">
         <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false">
             <classpath>
+                <pathelement path="${lib.dir}/gs-ui-swing-2.0.jar"/>
+                <pathelement path="${lib.dir}/gs-core-2.0.jar"/>
             </classpath>
         </javac>
     </target>
@@ -33,6 +38,9 @@
                 <pathelement path="${lib.dir}/junit-jupiter-api-5.11.0.jar"/>
                 <pathelement path="${lib.dir}/junit-jupiter-engine-5.11.0.jar"/>
                 <pathelement path="${lib.dir}/junit-platform-console-standalone-1.11.0.jar"/>
+                <pathelement path="${lib.dir}/gs-ui-swing-2.0.jar"/>
+                <pathelement path="${lib.dir}/gs-core-2.0.jar"/>
+                <pathelement path="${lib.dir}/pherd-1.0.jar"/>
             </classpath>
         </javac>
     </target>
@@ -44,6 +52,9 @@
             <arg value="--scan-class-path"/>
             <classpath>
                 <pathelement path="${lib.dir}/junit-platform-console-standalone-1.11.0.jar"/>
+                <pathelement path="${lib.dir}/gs-ui-swing-2.0.jar"/>
+                <pathelement path="${lib.dir}/gs-core-2.0.jar"/>
+                <pathelement path="${lib.dir}/pherd-1.0.jar"/>
                 <pathelement path="${classes.dir}"/>
                 <pathelement path="${test.classes.dir}"/>
             </classpath>
@@ -54,6 +65,9 @@
         <java classname="${package.name}.Main" fork="true">
             <classpath>
                 <pathelement path="${classes.dir}"/>
+                <pathelement path="${lib.dir}/gs-ui-swing-2.0.jar"/>
+                <pathelement path="${lib.dir}/gs-core-2.0.jar"/>
+                <pathelement path="${lib.dir}/pherd-1.0.jar"/>
             </classpath>
         </java>
     </target>
