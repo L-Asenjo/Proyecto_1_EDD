@@ -27,7 +27,7 @@ public class MainMenu extends javax.swing.JFrame {
         this.NetName.setText(this.mainClass.red.getNombre());
     }
 
-    private MainMenu() {
+    public MainMenu() {
         initComponents();
     }
 
@@ -44,7 +44,7 @@ public class MainMenu extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         Exit = new javax.swing.JButton();
         Radius = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        changeRadius = new javax.swing.JButton();
         NetName = new javax.swing.JLabel();
         CoverManagementBtn = new javax.swing.JButton();
         SelectFileBtn = new javax.swing.JButton();
@@ -68,8 +68,13 @@ public class MainMenu extends javax.swing.JFrame {
         Radius.setText("Radio de Cobertura: ");
         jPanel1.add(Radius, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 130, 20));
 
-        jButton2.setText("Cambiar Radio");
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, -1, -1));
+        changeRadius.setText("Cambiar Radio");
+        changeRadius.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeRadiusActionPerformed(evt);
+            }
+        });
+        jPanel1.add(changeRadius, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, -1, -1));
 
         NetName.setForeground(new java.awt.Color(0, 0, 0));
         NetName.setText("a");
@@ -119,9 +124,14 @@ public class MainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_ModifyNetworkBtnActionPerformed
 
     private void SelectFileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SelectFileBtnActionPerformed
-        SeleccionarArchivoForm seleccionarArchivoForm = new SeleccionarArchivoForm(mainClass, menuPrincipalForm);
+        SeleccionarArchivoForm seleccionarArchivoForm = new SeleccionarArchivoForm(mainClass, menuPrincipalForm, this);
         seleccionarArchivoForm.setVisible(true);
     }//GEN-LAST:event_SelectFileBtnActionPerformed
+
+    private void changeRadiusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeRadiusActionPerformed
+        ChangeRadius changeRadius = new ChangeRadius(mainClass, this);
+        changeRadius.setVisible(true);
+    }//GEN-LAST:event_changeRadiusActionPerformed
 
     /**
      * @param args the command line arguments
@@ -154,6 +164,7 @@ public class MainMenu extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new MainMenu().setVisible(true);
+                
             }
         });
     }
@@ -165,7 +176,7 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JLabel NetName;
     private javax.swing.JLabel Radius;
     private javax.swing.JButton SelectFileBtn;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton changeRadius;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSpinner jSpinner1;
     // End of variables declaration//GEN-END:variables

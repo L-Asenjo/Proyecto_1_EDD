@@ -37,7 +37,8 @@ public class ModifyNetwork extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         AddRoute = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        AddStation = new javax.swing.JButton();
+        Exit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -52,8 +53,21 @@ public class ModifyNetwork extends javax.swing.JFrame {
         });
         jPanel1.add(AddRoute, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 170, 130, 30));
 
-        jButton1.setText("Agregar Parada");
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 210, 130, 30));
+        AddStation.setText("Agregar Parada");
+        AddStation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AddStationActionPerformed(evt);
+            }
+        });
+        jPanel1.add(AddStation, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 210, 130, 30));
+
+        Exit.setText("X");
+        Exit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ExitActionPerformed(evt);
+            }
+        });
+        jPanel1.add(Exit, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 20, 40, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -70,8 +84,18 @@ public class ModifyNetwork extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void AddRouteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddRouteActionPerformed
-        // TODO add your handling code here:
+        AddRoute addRoute = new AddRoute();
+        addRoute.setVisible(true);
     }//GEN-LAST:event_AddRouteActionPerformed
+
+    private void ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitActionPerformed
+        dispose();
+    }//GEN-LAST:event_ExitActionPerformed
+
+    private void AddStationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddStationActionPerformed
+        AddStation addStation = new AddStation();
+        addStation.setVisible(true);
+    }//GEN-LAST:event_AddStationActionPerformed
 
     /**
      * @param args the command line arguments
@@ -110,7 +134,8 @@ public class ModifyNetwork extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton AddRoute;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton AddStation;
+    private javax.swing.JButton Exit;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

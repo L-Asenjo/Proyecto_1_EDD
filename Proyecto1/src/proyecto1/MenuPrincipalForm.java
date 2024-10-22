@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 public class MenuPrincipalForm extends javax.swing.JFrame {
 
     private Proyecto1 mainClass;
+    private MainMenu mainMenu = new MainMenu();
     /**
      * Creates new form MenuPrincipal
      */
@@ -66,9 +67,8 @@ public class MenuPrincipalForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ArchivosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ArchivosActionPerformed
-        SeleccionarArchivoForm seleccionarArchivoForm = new SeleccionarArchivoForm(mainClass, this);
+        SeleccionarArchivoForm seleccionarArchivoForm = new SeleccionarArchivoForm(mainClass, this, mainMenu);
         seleccionarArchivoForm.setVisible(true);
-        setVisible(false);
     }//GEN-LAST:event_ArchivosActionPerformed
 
     private void ExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExitActionPerformed

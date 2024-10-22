@@ -15,6 +15,7 @@ public class SeleccionarArchivoForm extends javax.swing.JFrame {
 
     private Proyecto1 mainClass;
     private MenuPrincipalForm menuPrincipalForm;
+    private MainMenu mainMenu;
     
     /**
      * Creates new form SeleccionarArchivoForm
@@ -22,10 +23,11 @@ public class SeleccionarArchivoForm extends javax.swing.JFrame {
     public SeleccionarArchivoForm() {
         initComponents();
     }
-    public SeleccionarArchivoForm(Proyecto1 mainClass, MenuPrincipalForm menuPrincipalForm) {
+    public SeleccionarArchivoForm(Proyecto1 mainClass, MenuPrincipalForm menuPrincipalForm, MainMenu mainMenu) {
         setLocationRelativeTo(menuPrincipalForm);
         this.mainClass = mainClass;
         this.menuPrincipalForm = menuPrincipalForm;
+        this.mainMenu = mainMenu;
         initComponents();
         File directorio = new File("./data/");
         pnSeleccionarArchivo.setCurrentDirectory(directorio);
@@ -70,11 +72,17 @@ public class SeleccionarArchivoForm extends javax.swing.JFrame {
         File selectedFile = pnSeleccionarArchivo.getSelectedFile();
         if (selectedFile == null){
             dispose();
-            menuPrincipalForm.setVisible(true);
+            if (menuPrincipalForm.isActive()){
+                menuPrincipalForm.setVisible(true);
+            } else if (mainMenu.isActive()){
+                mainMenu.setVisible(true);
+            }
             return;
         }
         mainClass.nombreArchivo = selectedFile.getAbsolutePath();
         dispose();
+        menuPrincipalForm.setVisible(false);
+        mainMenu.setVisible(false);
         MainMenu mainmenu = new MainMenu(mainClass, menuPrincipalForm);
         mainmenu.setVisible(true);
         return;
