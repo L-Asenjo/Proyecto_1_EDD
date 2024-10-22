@@ -2,9 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package grafo;
+package proyecto1;
 
-import java.awt.Toolkit;
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.graph.Edge;
+import org.graphstream.graph.Node;
 
 /**
  * Clase que representa una red de transporte. Implementada con ArrayList.
@@ -21,9 +24,23 @@ public class Red extends ArrayList<Linea> implements IRed {
      */
     private DatosRedArchivo datosRedArchivo;
 
+    /**
+     * Objeto que se encarga de parsear los datos de un archivo json con
+     * los datos de una red.
+     */
+
     private JsonRedParser jsonRedParser;
 
+    /**
+     * Objeto que se encarga de la representación de la red.
+     */
     private Grafo grafo;
+
+    /**
+     * Implementación de Grafos en GraphStream. Usada para representar la
+     * Interfaz gráfica del grafo.
+     */
+    private Graph gsGraph;
 
     /**
      * Constructor por defecto.
@@ -33,6 +50,8 @@ public class Red extends ArrayList<Linea> implements IRed {
         this.datosRedArchivo = new DatosRedArchivo();
         this.jsonRedParser = new JsonRedParser();
         this.grafo = new Grafo();
+        this.gsGraph = new SingleGraph("GrafoRedDeTransporte");
+
     }
 
     /**
@@ -47,6 +66,7 @@ public class Red extends ArrayList<Linea> implements IRed {
         this.datosRedArchivo = new DatosRedArchivo(nombreArchivo);
         this.jsonRedParser = new JsonRedParser();
         this.grafo = new Grafo();
+        this.gsGraph = new SingleGraph("GrafoRedDeTransporte");
     }
 
     /**
@@ -68,6 +88,7 @@ public class Red extends ArrayList<Linea> implements IRed {
             throw new IllegalArgumentException("El nombre de la red no puede estar vacío");
         }
         this.nombre = nombre.strip();
+        this.gsGraph.setAttribute("ui.title", this.getNombre());
     }
 
     /**
@@ -97,6 +118,21 @@ public class Red extends ArrayList<Linea> implements IRed {
 
     public void setGrafo(Grafo grafo) {
         this.grafo = grafo;
+    }
+
+    /**
+     * Getter del grafo de GraphStream.
+     */
+    public Graph getGsGraph() {
+        return this.gsGraph;
+    }
+
+    /**
+     * Setter del grafo de GraphStream.
+     */
+
+    public void setGsGraph(Graph gsGraph) {
+        this.gsGraph = gsGraph;
     }
 
     /**
@@ -355,55 +391,6 @@ public class Red extends ArrayList<Linea> implements IRed {
         return this.cargarArchivo();
     }
 
-    public void cargarGrafo() {
-        this.grafo.vaciar();
-        for (int i = 0; i < this.size(); i++) {
-            String[] nombreParadas = this.get(i).getParadas();
-            for (int j = 0; j < nombreParadas.length; j++) {
-                String[] paradas;
-                String adyacenteAnterior = null;
-                String adyacenteSiguiente = null;
-                if (j > 0) {
-                    if (nombreParadas[j - 1].contains(":")) {
-
-                        adyacenteAnterior = nombreParadas[j - 1].split(":")[0].strip();
-                    } else {
-                        adyacenteAnterior = nombreParadas[j - 1].strip();
-                    }
-                }
-                if (j < nombreParadas.length - 1) {
-                    if (nombreParadas[j + 1].contains(":")) {
-                        adyacenteSiguiente = nombreParadas[j + 1].split(":")[0].strip();
-                    } else {
-                        adyacenteSiguiente = nombreParadas[j + 1].strip();
-                    }
-                }
-                if (nombreParadas[j].contains(":")) {
-                    paradas = nombreParadas[j].split(":");
-                    this.grafo.agregarVertice(paradas[0].strip());
-                    this.grafo.agregarVertice(paradas[1].strip());
-                    this.grafo.agregarAdyacente(paradas[0].strip(), paradas[1].strip(), 0);
-                } else {
-                    paradas = new String[1];
-                    paradas[0] = nombreParadas[j].strip();
-                    this.grafo.agregarVertice(nombreParadas[j].strip());
-                }
-                if (adyacenteAnterior != null) {
-                    this.grafo.agregarVertice(adyacenteAnterior);
-                    this.grafo.agregarAdyacente(paradas[0].strip(), adyacenteAnterior.strip(), 1);
-                }
-                if (adyacenteSiguiente != null) {
-                    this.grafo.agregarVertice(adyacenteSiguiente);
-                    this.grafo.agregarAdyacente(paradas[0].strip(), adyacenteSiguiente.strip(), 1);
-                }
-            }
-        }
-    }
-
-    public String grafoToString() {
-        return this.grafo.toString();
-    }
-
     /**
      * Devuelve el String con una representación de la red.
      */
@@ -469,76 +456,78 @@ public class Red extends ArrayList<Linea> implements IRed {
     }
 
     /**
-     * Devuelve el valor de T del grafo.
-     * 
-     * @return T
+     * Carga el grafo GsGraph de la red usando los vertices y adyacentes de
+     * this.grafo.
      */
-    public int getT() {
-        return this.grafo.getT();
+    public void cargarGsGraph() {
+        String[] vertices = this.grafo.getVertices();
+        this.gsGraph.clear();
+        for (int i = 0; i < vertices.length; i++) {
+            if (this.gsGraph.getNode(vertices[i]) == null) {
+                this.gsGraph.addNode(vertices[i]);
+                Node node = this.gsGraph.getNode(vertices[i]);
+                node.setAttribute("ui.label", vertices[i]);
+//                node.setAttribute("ui.style", "size: 8px; fill-color: red;");
+                node.setAttribute("ui.style", "size: 8px; stroke-mode: plain; stroke-color: green; stroke-width: 3px; fill-color: rgba(0,0,0,0);");
+//                node.setAttribute("ui.style", "size: 8px; stroke-mode: plain; stroke-color: blue; stroke-width: 3px; fill-color: rgba(0,0,0,0);");
+
+
+            }
+            Vertice vertice = this.grafo.buscarVertice(vertices[i]);
+            Adyacente[] adyacentes = vertice.getAdyacentes();
+            for (int j = 0; j < adyacentes.length; j++) {
+                if (this.gsGraph.getNode(adyacentes[j].nombre) == null) {
+                    this.gsGraph.addNode(adyacentes[j].nombre);
+                    Node node = this.gsGraph.getNode(adyacentes[j].nombre);
+                    node.setAttribute("ui.label", adyacentes[j].nombre);
+//                    node.setAttribute("ui.style", "size: 8px; fill-color: red;");
+                    node.setAttribute("ui.style", "size: 8px; stroke-mode: plain; stroke-color: green; stroke-width: 3px; fill-color: rgba(0,0,0,0);");
+//                    node.setAttribute("ui.style", "size: 8px; stroke-mode: plain; stroke-color: blue; stroke-width: 3px; fill-color: rgba(0,0,0,0);");
+
+
+                }
+                String nombreOrigenDestino = vertice.getNombre() + "-" + adyacentes[j].nombre;
+                String nombreDestinoOrigen = adyacentes[j].nombre + "-" + vertice.getNombre();
+                if (this.gsGraph.getEdge(nombreOrigenDestino) == null
+                        && this.gsGraph.getEdge(nombreDestinoOrigen) == null) {
+                    this.gsGraph.addEdge(nombreOrigenDestino, vertice.getNombre(), adyacentes[j].nombre, false);
+                    Edge edge = this.gsGraph.getEdge(nombreOrigenDestino);
+                    edge.setAttribute("peso", adyacentes[j].peso);
+                    edge.setAttribute("ui.label", adyacentes[j].peso);
+                }
+            }
+        }
+    }
+
+   
+    public String gsGraphToString() {
+        String txt = "Grafo: " + this.gsGraph.toString() + "\n";
+        for (int i = 0; i < this.gsGraph.getNodeCount(); i++) {
+            txt += "Vertice: " + this.gsGraph.getNode(i).toString() + "\n";
+        }
+        for (int i = 0; i < this.gsGraph.getEdgeCount(); i++) {
+            txt += "Arista: " + this.gsGraph.getEdge(i).getId().toString() + " Peso: "
+                    + this.gsGraph.getEdge(i).getAttribute("peso") + "\n";
+        }
+        return txt;
     }
 
     /**
-     * Cambia el valor de T del grafo.
+     * Comprueba si el grafo GsGraph es vacío.
      * 
-     * @param t nuevo valor de T
+     * @return true si el grafo GsGraph es vacío, false en caso contrario
      */
-    public void setT(int t) {
-        this.grafo.setT(t);
+    public boolean gsGraphVacio() {
+        return this.gsGraph.getNodeCount() == 0;
     }
 
     /**
-     * Agrega una sucursal al grafo.
+     * Comprueba si el grafo es vacío.
      * 
-     * @param nombre el nombre de la sucursal
-     * @return true si se agrego o false si ya existe
+     * @return true si el grafo es vacío, false en caso contrario
      */
-    public boolean agregarSucursal(String nombre) {
-        return this.grafo.agregarSucursal(nombre);
-    }
-
-    /**
-     * Elimina una sucursal del grafo.
-     * 
-     * @param nombre el nombre de la sucursal
-     * @return true si se elimino o false si no existe
-     */
-    public boolean removerSucursal(String nombre) {
-        return this.grafo.removerSucursal(nombre);
-    }
-
-    /**
-     * Cambia el arreglo de sucursales del grafo.
-     * 
-     * @param sucursales el nuevo arreglo de sucursales
-     * @return true si se pudo cambiar o false en caso contrario
-     */
-    public boolean setSucursales(String[] sucursales) {
-        return this.grafo.setSucursales(sucursales);
-    }
-
-    /**
-     * Vaciado de la lista de sucursales.
-     */
-    public void vaciarSucursales() {
-        this.grafo.vaciarSucursales();
-    }
-
-    /**
-     * Devuelve el arreglo de sucursales del grafo.
-     * 
-     * @return el arreglo de sucursales
-     */
-    public String[] getSucursales() {
-        return this.grafo.getSucursales();
-    }
-
-    /**
-     * Devuelve el String con una representación del grafo.
-     * 
-     * @return el String
-     */
-    public String grafoToString() {
-        return this.grafo.toString();
+    public boolean grafoVacio() {
+        return this.grafo.getVerticesSize() == 0;
     }
 
     /**
@@ -556,22 +545,23 @@ public class Red extends ArrayList<Linea> implements IRed {
         // System.out.println();
         // }
         red.cargarGrafo();
-        System.out.println(red.grafoToString());
+        // System.out.println(red.grafoToString());
         // System.out.println("El grafo es conexo? " + red.grafo.esConexo());
-        red.grafo.setT(3);
-        red.grafo.agregarSucursal("Propatria");
+        // red.grafo.setT(3);
+        // red.grafo.agregarSucursal("Propatria");
         // red.grafo.agregarSucursal("Terminal");
 
         // System.out.println("El numero de vertices es: " +
         // red.grafo.getVertices().length);
 
         // System.out.print("Las sucursales recomendadas son: ");
-        String[] sucursales = red.grafo.recomendarSucursales();
-
-        for (int i = 0; i < sucursales.length; i++) {
-            System.out.print(" " + sucursales[i] + " ");
-        }
-        System.out.println();
+        // String[] sucursales = red.grafo.recomendarSucursales();
+        // for (int i = 0; i < sucursales.length; i++) {
+        // System.out.print(" " + sucursales[i] + " ");
+        // }
+        // System.out.println();
+        red.cargarGsGraph();
+        System.out.println(red.gsGraphToString());
 
     }
 
