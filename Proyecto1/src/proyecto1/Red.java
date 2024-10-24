@@ -2,7 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package proyecto1;
+package grafo;
+
+import java.awt.Toolkit;
 
 /**
  * Clase que representa una red de transporte. Implementada con ArrayList.
@@ -21,6 +23,8 @@ public class Red extends ArrayList<Linea> implements IRed {
 
     private JsonRedParser jsonRedParser;
 
+    private Grafo grafo;
+
     /**
      * Constructor por defecto.
      */
@@ -28,6 +32,7 @@ public class Red extends ArrayList<Linea> implements IRed {
         this.nombre = null;
         this.datosRedArchivo = new DatosRedArchivo();
         this.jsonRedParser = new JsonRedParser();
+        this.grafo = new Grafo();
     }
 
     /**
@@ -41,6 +46,7 @@ public class Red extends ArrayList<Linea> implements IRed {
         super(1);
         this.datosRedArchivo = new DatosRedArchivo(nombreArchivo);
         this.jsonRedParser = new JsonRedParser();
+        this.grafo = new Grafo();
     }
 
     /**
@@ -80,6 +86,17 @@ public class Red extends ArrayList<Linea> implements IRed {
      */
     public void setNombreArchivo(String nombreArchivo) {
         this.datosRedArchivo.setNombreArchivo(nombreArchivo);
+    }
+
+    /**
+     * Getter del grafo.
+     */
+    public Grafo getGrafo() {
+        return this.grafo;
+    }
+
+    public void setGrafo(Grafo grafo) {
+        this.grafo = grafo;
     }
 
     /**
@@ -162,9 +179,6 @@ public class Red extends ArrayList<Linea> implements IRed {
                 return false;
             }
             i = this.buscarLineaPorNombre(nombreLinea);
-            if (i == -1) {
-                return false;
-            }
             lineaCreada = true;
         }
         Linea linea = this.get(i);
@@ -237,9 +251,6 @@ public class Red extends ArrayList<Linea> implements IRed {
                 return false;
             }
             i = this.buscarLineaPorNombre(nombreLinea);
-            if (i == -1) {
-                return false;
-            }
             lineaCreada = true;
         }
         for (int j = 0; j < paradas.length; j++) {
@@ -319,8 +330,7 @@ public class Red extends ArrayList<Linea> implements IRed {
             Linea linea = new Linea(nombresLineas[i]);
             for (int j = 0; j < nombresParadas[i].length; j++) {
                 if (nombresParadas[i][j].contains(":")) {
-                    String nombreParada = nombresParadas[i][j].substring(1,
-                            nombresParadas[i][j].length() - 1);
+                    String nombreParada = nombresParadas[i][j].strip();
                     String[] aux = nombreParada.split(":");
                     Parada parada = new Parada(aux[0].strip(), aux[1].strip());
                     linea.agregar(parada);
@@ -345,6 +355,55 @@ public class Red extends ArrayList<Linea> implements IRed {
         return this.cargarArchivo();
     }
 
+    public void cargarGrafo() {
+        this.grafo.vaciar();
+        for (int i = 0; i < this.size(); i++) {
+            String[] nombreParadas = this.get(i).getParadas();
+            for (int j = 0; j < nombreParadas.length; j++) {
+                String[] paradas;
+                String adyacenteAnterior = null;
+                String adyacenteSiguiente = null;
+                if (j > 0) {
+                    if (nombreParadas[j - 1].contains(":")) {
+
+                        adyacenteAnterior = nombreParadas[j - 1].split(":")[0].strip();
+                    } else {
+                        adyacenteAnterior = nombreParadas[j - 1].strip();
+                    }
+                }
+                if (j < nombreParadas.length - 1) {
+                    if (nombreParadas[j + 1].contains(":")) {
+                        adyacenteSiguiente = nombreParadas[j + 1].split(":")[0].strip();
+                    } else {
+                        adyacenteSiguiente = nombreParadas[j + 1].strip();
+                    }
+                }
+                if (nombreParadas[j].contains(":")) {
+                    paradas = nombreParadas[j].split(":");
+                    this.grafo.agregarVertice(paradas[0].strip());
+                    this.grafo.agregarVertice(paradas[1].strip());
+                    this.grafo.agregarAdyacente(paradas[0].strip(), paradas[1].strip(), 0);
+                } else {
+                    paradas = new String[1];
+                    paradas[0] = nombreParadas[j].strip();
+                    this.grafo.agregarVertice(nombreParadas[j].strip());
+                }
+                if (adyacenteAnterior != null) {
+                    this.grafo.agregarVertice(adyacenteAnterior);
+                    this.grafo.agregarAdyacente(paradas[0].strip(), adyacenteAnterior.strip(), 1);
+                }
+                if (adyacenteSiguiente != null) {
+                    this.grafo.agregarVertice(adyacenteSiguiente);
+                    this.grafo.agregarAdyacente(paradas[0].strip(), adyacenteSiguiente.strip(), 1);
+                }
+            }
+        }
+    }
+
+    public String grafoToString() {
+        return this.grafo.toString();
+    }
+
     /**
      * Devuelve el String con una representación de la red.
      */
@@ -361,13 +420,158 @@ public class Red extends ArrayList<Linea> implements IRed {
     }
 
     /**
+     * Carga la información de la red en el grafo.
+     * Vaciando todo su contenido anterior.
+     */
+    public void cargarGrafo() {
+        this.grafo.vaciar();
+        for (int i = 0; i < this.size(); i++) {
+            String[] nombreParadas = this.get(i).getParadas();
+            for (int j = 0; j < nombreParadas.length; j++) {
+                String[] paradas;
+                String adyacenteAnterior = null;
+                String adyacenteSiguiente = null;
+                if (j > 0) {
+                    if (nombreParadas[j - 1].contains(":")) {
+
+                        adyacenteAnterior = nombreParadas[j - 1].split(":")[0].strip();
+                    } else {
+                        adyacenteAnterior = nombreParadas[j - 1].strip();
+                    }
+                }
+                if (j < nombreParadas.length - 1) {
+                    if (nombreParadas[j + 1].contains(":")) {
+                        adyacenteSiguiente = nombreParadas[j + 1].split(":")[0].strip();
+                    } else {
+                        adyacenteSiguiente = nombreParadas[j + 1].strip();
+                    }
+                }
+                if (nombreParadas[j].contains(":")) {
+                    paradas = nombreParadas[j].split(":");
+                    this.grafo.agregarVertice(paradas[0].strip());
+                    this.grafo.agregarVertice(paradas[1].strip());
+                    this.grafo.agregarAdyacente(paradas[0].strip(), paradas[1].strip(), 0);
+                } else {
+                    paradas = new String[1];
+                    paradas[0] = nombreParadas[j].strip();
+                    this.grafo.agregarVertice(nombreParadas[j].strip());
+                }
+                if (adyacenteAnterior != null) {
+                    this.grafo.agregarVertice(adyacenteAnterior);
+                    this.grafo.agregarAdyacente(paradas[0].strip(), adyacenteAnterior.strip(), 1);
+                }
+                if (adyacenteSiguiente != null) {
+                    this.grafo.agregarVertice(adyacenteSiguiente);
+                    this.grafo.agregarAdyacente(paradas[0].strip(), adyacenteSiguiente.strip(), 1);
+                }
+            }
+        }
+    }
+
+    /**
+     * Devuelve el valor de T del grafo.
+     * 
+     * @return T
+     */
+    public int getT() {
+        return this.grafo.getT();
+    }
+
+    /**
+     * Cambia el valor de T del grafo.
+     * 
+     * @param t nuevo valor de T
+     */
+    public void setT(int t) {
+        this.grafo.setT(t);
+    }
+
+    /**
+     * Agrega una sucursal al grafo.
+     * 
+     * @param nombre el nombre de la sucursal
+     * @return true si se agrego o false si ya existe
+     */
+    public boolean agregarSucursal(String nombre) {
+        return this.grafo.agregarSucursal(nombre);
+    }
+
+    /**
+     * Elimina una sucursal del grafo.
+     * 
+     * @param nombre el nombre de la sucursal
+     * @return true si se elimino o false si no existe
+     */
+    public boolean removerSucursal(String nombre) {
+        return this.grafo.removerSucursal(nombre);
+    }
+
+    /**
+     * Cambia el arreglo de sucursales del grafo.
+     * 
+     * @param sucursales el nuevo arreglo de sucursales
+     * @return true si se pudo cambiar o false en caso contrario
+     */
+    public boolean setSucursales(String[] sucursales) {
+        return this.grafo.setSucursales(sucursales);
+    }
+
+    /**
+     * Vaciado de la lista de sucursales.
+     */
+    public void vaciarSucursales() {
+        this.grafo.vaciarSucursales();
+    }
+
+    /**
+     * Devuelve el arreglo de sucursales del grafo.
+     * 
+     * @return el arreglo de sucursales
+     */
+    public String[] getSucursales() {
+        return this.grafo.getSucursales();
+    }
+
+    /**
+     * Devuelve el String con una representación del grafo.
+     * 
+     * @return el String
+     */
+    public String grafoToString() {
+        return this.grafo.toString();
+    }
+
+    /**
      * Solo un main para probar cosas.
      */
     public static void main(String[] args) {
         Red red = new Red(".\\data\\Caracas.json");
         // Red red = new Red(".\\data\\Bogota.json");
         red.cargarArchivo();
-        System.out.println(red.toString());
+        // System.out.println(red.toString());
+
+        // for (int i = 0; i < red.size(); i++) {
+        // System.out.print(red.get(i).getNombre() + ": ");
+        // System.out.println(red.get(i).toString());
+        // System.out.println();
+        // }
+        red.cargarGrafo();
+        System.out.println(red.grafoToString());
+        // System.out.println("El grafo es conexo? " + red.grafo.esConexo());
+        red.grafo.setT(3);
+        red.grafo.agregarSucursal("Propatria");
+        // red.grafo.agregarSucursal("Terminal");
+
+        // System.out.println("El numero de vertices es: " +
+        // red.grafo.getVertices().length);
+
+        // System.out.print("Las sucursales recomendadas son: ");
+        String[] sucursales = red.grafo.recomendarSucursales();
+
+        for (int i = 0; i < sucursales.length; i++) {
+            System.out.print(" " + sucursales[i] + " ");
+        }
+        System.out.println();
 
     }
 
