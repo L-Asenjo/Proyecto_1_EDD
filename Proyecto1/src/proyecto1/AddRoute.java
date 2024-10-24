@@ -11,6 +11,8 @@ package proyecto1;
  */
 public class AddRoute extends javax.swing.JFrame {
 
+    private Proyecto1 mainClass;
+    
     /**
      * Creates new form AddRoute
      */
@@ -18,6 +20,12 @@ public class AddRoute extends javax.swing.JFrame {
         initComponents();
     }
 
+    public AddRoute(Proyecto1 mainClass, ModifyNetwork modifyNetwork){
+        setLocationRelativeTo(modifyNetwork);
+        this.mainClass = mainClass;
+        initComponents();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

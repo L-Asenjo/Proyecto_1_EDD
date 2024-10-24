@@ -11,6 +11,8 @@ package proyecto1;
  */
 public class AddStation extends javax.swing.JFrame {
 
+    
+    private Proyecto1 mainClass;
     /**
      * Creates new form AddStation
      */
@@ -18,6 +20,14 @@ public class AddStation extends javax.swing.JFrame {
         initComponents();
     }
 
+    public AddStation(Proyecto1 mainClass, ModifyNetwork modifyNetwork){
+        setLocationRelativeTo(modifyNetwork);
+        this.mainClass = mainClass;
+        initComponents();
+        for (int i = 0; i < this.mainClass.red.getNombresLineas().length; i++) {
+            this.SelectLinea.addItem(this.mainClass.red.getNombresLineas()[i]);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -30,12 +40,9 @@ public class AddStation extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        StationName = new javax.swing.JTextField();
-        Adyacentes = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        NAdyacentes = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
+        SelectLinea = new javax.swing.JComboBox<>();
+        SelectAdyacente = new javax.swing.JComboBox<>();
+        SelectAdyacente2 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -51,28 +58,31 @@ public class AddStation extends javax.swing.JFrame {
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(337, 20, 40, -1));
 
         jButton2.setText("Agregar");
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 210, 100, 30));
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 240, 100, 30));
 
-        StationName.addActionListener(new java.awt.event.ActionListener() {
+        SelectLinea.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        SelectLinea.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                StationNameActionPerformed(evt);
+                SelectLineaActionPerformed(evt);
             }
         });
-        jPanel1.add(StationName, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 80, 180, 30));
-        jPanel1.add(Adyacentes, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 160, 210, 30));
+        jPanel1.add(SelectLinea, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 100, 30));
 
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setText("Nombre de la Nueva Parada");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 160, 20));
+        SelectAdyacente.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        SelectAdyacente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SelectAdyacenteActionPerformed(evt);
+            }
+        });
+        jPanel1.add(SelectAdyacente, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 80, 100, 30));
 
-        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel2.setText("Paradas Adyacentes:");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 170, 130, -1));
-        jPanel1.add(NAdyacentes, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 120, 100, 30));
-
-        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel3.setText("Número de Paradas Adyacentes:");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 130, -1, -1));
+        SelectAdyacente2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        SelectAdyacente2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SelectAdyacente2ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(SelectAdyacente2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 80, 110, 30));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -92,9 +102,24 @@ public class AddStation extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void StationNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StationNameActionPerformed
+    private void SelectLineaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SelectLineaActionPerformed
+        Linea l = this.mainClass.red.get(mainClass.red.buscarLineaPorNombre((String) SelectLinea.getSelectedItem()));
+        for (int i = 0; i < l.getTamArreglo(); i++) {
+            this.SelectAdyacente.addItem(l.get(i).getNombre());
+        }
+    }//GEN-LAST:event_SelectLineaActionPerformed
+
+    private void SelectAdyacenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SelectAdyacenteActionPerformed
+        Linea l = this.mainClass.red.get(mainClass.red.buscarLineaPorNombre((String) SelectLinea.getSelectedItem()));
+        Parada p = l.get(l.buscarParadaPorNombre((String)this.SelectAdyacente.getSelectedItem()));
+        this.SelectAdyacente2.addItem(l.get(l.buscarParadaPorNombre(p.getNombre())-1).getNombre());
+        this.SelectAdyacente2.addItem(l.get(l.buscarParadaPorNombre(p.getNombre())-1).getNombre());   
+
+    }//GEN-LAST:event_SelectAdyacenteActionPerformed
+
+    private void SelectAdyacente2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SelectAdyacente2ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_StationNameActionPerformed
+    }//GEN-LAST:event_SelectAdyacente2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -132,14 +157,11 @@ public class AddStation extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField Adyacentes;
-    private javax.swing.JTextField NAdyacentes;
-    private javax.swing.JTextField StationName;
+    private javax.swing.JComboBox<String> SelectAdyacente;
+    private javax.swing.JComboBox<String> SelectAdyacente2;
+    private javax.swing.JComboBox<String> SelectLinea;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

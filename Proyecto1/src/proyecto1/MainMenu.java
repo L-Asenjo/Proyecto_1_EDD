@@ -24,6 +24,7 @@ public class MainMenu extends javax.swing.JFrame {
         this.mainClass = mainClass;
         this.menuPrincipalForm = menuPrincipalForm;
         initComponents();
+        this.mainClass.red.cargarArchivo(this.mainClass.nombreArchivo);
         this.NetName.setText(this.mainClass.red.getNombre());
     }
 

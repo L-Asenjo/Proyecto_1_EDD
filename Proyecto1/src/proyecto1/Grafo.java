@@ -762,7 +762,7 @@ public class Grafo {
 
         // Hago la llamada recursiva para cada posible sucursal
         for (int i = 0; i < posiblesSucursalesList.size(); i++) {
-            ArrayList<String> sucursalesRecomendadas = new ArrayList<>(sucursales);
+            ArrayList<String> sucursalesRecomendadas = new ArrayList<>(sucursales.getTamArreglo());
             sucursalesRecomendadas.agregar(posiblesSucursalesList.get(i));
             calcularSucursales(sucursalesRecomendadas, verticesSet, resultados);
         }
@@ -804,7 +804,7 @@ public class Grafo {
             return new String[0];
         }
 
-        ArrayList<String> sucursalesIniciales = new ArrayList<>(this.sucursales);
+        ArrayList<String> sucursalesIniciales = new ArrayList<>(this.sucursales.getTamArreglo());
         // Hago la llamada al método recursivo que calcula las mejores sucursales
 
         ArrayList<ArrayList<String>> resultados = new ArrayList<>();
