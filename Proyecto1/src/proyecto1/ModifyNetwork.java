@@ -84,7 +84,7 @@ public class ModifyNetwork extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void AddRouteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddRouteActionPerformed
-        AddRoute addRoute = new AddRoute();
+        AddRoute addRoute = new AddRoute(mainClass, this);
         addRoute.setVisible(true);
     }//GEN-LAST:event_AddRouteActionPerformed
 
@@ -93,7 +93,7 @@ public class ModifyNetwork extends javax.swing.JFrame {
     }//GEN-LAST:event_ExitActionPerformed
 
     private void AddStationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddStationActionPerformed
-        AddStation addStation = new AddStation();
+        AddStation addStation = new AddStation(mainClass, this);
         addStation.setVisible(true);
     }//GEN-LAST:event_AddStationActionPerformed
 
