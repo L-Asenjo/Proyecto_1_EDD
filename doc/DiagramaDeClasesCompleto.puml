@@ -1,0 +1,96 @@
+@startuml
+
+title Diagrama de Clases Proyecto #1 (Completo)
+skinparam ClassAttributeIconSize 0
+
+class Adyacente #LightSalmon {
+}
+
+class Visitado #LightSalmon {
+}
+
+class Vertice #LightSalmon{
+}
+
+class Parada #LightSalmon {
+}
+
+class Linea #LightSalmon {
+}
+
+class Red #LightSalmon{
+}
+
+enum TipoBusqueda #LightCyan {
+}
+
+class Grafo #LightSalmon{
+}
+
+interface IRed #LightBlue{
+}
+
+class Fifo<T> #LightYellow {
+}
+
+class Lifo<T> #LightYellow {
+}
+
+class ArrayList<T> #LightYellow {
+
+}
+
+class Set<T> #LightYellow  {
+}
+
+Interface IList<T> #LightBlue {
+}
+
+Interface ILifo<T> <<Interface>> #LightBlue {
+}
+
+Interface IFifo<T> <<Interface>> #LightBlue {
+}
+
+Interface ISet<T> <<Interface>> #LightBlue {
+}
+
+interface IRedParser #LightBlue {
+}
+
+class JsonRedParser #LightPink {
+}
+
+class DatosRedArchivo #LightPink {
+}
+
+IRedParser *-left- JsonRedParser
+
+ArrayList "1" <.up. "1" Red
+Grafo "1" o-down- "1" ArrayList
+Red "1" *-left- "*" Linea
+Linea "1" *-left- "*" Parada
+ArrayList "1" *-right- "1" Lifo
+ArrayList "1" *-up- "1" Fifo
+ArrayList "1" *-up- "1" Set
+Grafo "1" o-right- "1" Fifo
+Grafo "1" o-right- "1" Lifo
+ArrayList "1" <.up. "1" Linea
+Grafo "1" o-up- "1" Set
+ISet *-- Set
+Grafo "1" *-up- "*" Vertice
+Vertice "1" o-up- "*" Adyacente
+Vertice "1" o-up- "*" Visitado
+Red "1" *-right- "1" Grafo
+ILifo *-left- Lifo
+IFifo *-left- Fifo
+IList *-right- ArrayList
+IRed *-down- Red
+IRedParser o-down- Red
+note as N1
+    Esta es la vista completa del diagrama de clases.
+    Para mayor información, revisar cada subdiagrama.
+end note
+
+
+@enduml
