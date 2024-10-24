@@ -1,0 +1,157 @@
+@startuml
+
+title Diagrama de Clases Proyecto #1 (Estructuras Básicas)
+skinparam ClassAttributeIconSize 0
+
+class Fifo<T> #LightYellow {
+    -list : ArrayList<T>
+    --
+    +Fifo()
+    +size() : int
+    +vacia() : boolean
+    +encolar(T valor) : boolean
+    +desencolar() : T
+    +frente() : T
+    +toString() : String
+}
+
+class Lifo<T> #LightYellow {
+    -list : ArrayList<T>
+    --
+    +Lifo()
+    +size() : int
+    +vacia() : boolean
+    +apilar(T valor) : boolean
+    +desapilar() : T
+    +tope() : T 
+    +vaciar() : void
+    +toString() : String
+}
+
+class ArrayList<T> #LightYellow {
+    -DEFAULT_TAM_INICIAL : int
+    -MAX_TAM_INICIAL : int
+    -DEFAULT_TAM_BLOQUE : int
+    -MAX_TAM_BLOQUE : int
+    -arreglo : T[]
+    -tamLista : int
+    -tamInicial : int
+    -tamBloque : int
+    --
+    +ArrayList()
+    +ArrayList(int tamBloque)
+    +ArrayList(int tamInicial, int tamBloque) 
+    +ArrayList(T[] valor)
+    +ArrayList(IList<T> valor)
+    +getTamArreglo() : int
+    +setTamInicial(int tamInicial) : void
+    +setTamBloque(int tamBloque) : void
+    +size() : int
+    +vacia() : boolean
+    +insertar(int index, T valor) : boolean
+    +agregar(T valor) : boolean
+    +agregar(T[] valor) : boolean[]
+    +agregar(IList<T> valor) : boolean[]
+    +get(int index) : T
+    +set(int index, T valor) : boolean
+    +compactar() : void
+    +remover(int index) : T
+    +vaciar() : void
+    +toString() : String
+}
+
+class Set<T> #LightYellow  {
+    -conjunto : ArrayList<T>
+    --
+    +Set()
+    +Set(IList<T> valor)
+    +Set(T[] valor)
+    +Set(ISet<T> set)
+    +size() : int
+    +vacio() : boolean
+    +contiene(T valor) : boolean
+    +agregar(T valor) : boolean
+    +agregar(T[] valor) : boolean[]
+    +agregar(IList<T> valor) : boolean[]
+    +agregar(ISet<T> set) : boolean[]
+    +remover(T valor) : boolean
+    +pop() : T
+    +union(ISet<T> set) : Set<T>
+    +interseccion(ISet<T> set) : Set<T>
+    +diferencia(ISet<T> set) : Set<T>
+    +diferenciaSimetrica(ISet<T> set) : Set<T>
+    +equals(ISet<T> set) : boolean
+    +toList() : ArrayList<T>
+    +vaciar() : void
+    +toString() : String
+}
+
+Interface IList<T> #LightBlue {
+    --
+    size() : int
+    vacia() : boolean
+    insertar(int index, T valor) : boolean
+    agregar(T valor) : boolean
+    agregar(T[] valor) : boolean[]
+    agregar(IList<T> valor) : boolean[]
+    get(int index) : T
+    set(int index, T valor) : boolean
+    remover(int index) : T
+    vaciar() : void
+    toString() : String
+}
+
+Interface ILifo<T> <<Interface>> #LightBlue {
+    Lifo()
+    size() : int
+    vacia() : boolean
+    apilar(T valor) : boolean
+    desapilar() : T
+    tope() : T 
+    vaciar() : void
+    toString() : String
+}
+
+Interface IFifo<T> <<Interface>> #LightBlue {
+    Fifo()
+    size() : int
+    vacia() : boolean
+    encolar(T valor) : boolean
+    desencolar() : T
+    frente() : T
+    toString() : String
+}
+
+Interface ISet<T> <<Interface>> #LightBlue {
+    Set()
+    Set(IList<T> valor)
+    Set(T[] valor)
+    Set(ISet<T> set)
+    size() : int
+    vacio() : boolean
+    contiene(T valor) : boolean
+    agregar(T valor) : boolean
+    agregar(T[] valor) : boolean[]
+    agregar(IList<T> valor) : boolean[]
+    agregar(ISet<T> set) : boolean[]
+    remover(T valor) : boolean
+    pop() : T
+    union(ISet<T> set) : Set<T>
+    interseccion(ISet<T> set) : Set<T>
+    diferencia(ISet<T> set) : Set<T>
+    diferenciaSimetrica(ISet<T> set) : Set<T>
+    equals(ISet<T> set) : boolean
+    toList() : ArrayList<T>
+    vaciar() : void
+    toString() : String
+}
+
+IList *-down- ArrayList
+ISet *-down- Set
+ArrayList "1" -right-* "1" Set
+ArrayList "1" -down-* "1" Fifo
+ArrayList "1" -down-* "1" Lifo
+ILifo *-right- Lifo
+IFifo *-left- Fifo
+
+@enduml

@@ -1,0 +1,203 @@
+@startuml
+
+title Diagrama de Clases Proyecto #1 (Grafos y Redes)
+skinparam ClassAttributeIconSize 0
+
+class Adyacente #LightSalmon {
+    +nombre : String
+    +peso : int
+    --
+    +Adyacente(String nombre, int peso)
+    +toString() : String
+
+}
+
+class Visitado #LightSalmon {
+    +nombre : String
+    +distancia : int
+    --
+    +Visitado(String nombre, int distancia)
+    +toString() : String
+}
+
+class Vertice #LightSalmon{
+    -nombre : String
+    -adyacentes : ArrayList<Adyacente>
+    -cobertura : ArrayList<Visitado>
+    --
+    +Vertice(String nombre)
+    +getNombre() : String
+    +coberturaSize() : int
+    +coberturaVacia() : boolean
+    +getCobertura() : Visitado[]
+    +getNombreCobertura() : String[]
+    +buscarVisitado(String nombre) : Visitado
+    +buscarVisitado(Visitado visitado) : Visitado
+    +agregarVisitado(Visitado visitado) : boolean
+    +agregarVisitado(String nombre, int distancia) : boolean
+    +getVisitado(int i) : Visitado
+    +adyacentesSize() : int
+    +adyacentesVacia() : boolean
+    +getAdyacentes() : Adyacente[]
+    +buscarAdyacente(String nombre) : Adyacente
+    +buscarAdyacente(Adyacente adyacente) : Adyacente
+    +agregarAdyacente(Adyacente adyacente) : boolean
+    +agregarAdyacente(String nombre, int peso) : boolean
+    +getAdyacentes(int i) : Adyacente
+    +vaciarCobertura() : void
+    +vaciarAdyacentes() : void
+    +vaciar() : void
+    +toString() : String
+}
+
+class Parada #LightSalmon {
+    -nombre : String
+    -alias : String
+    --
+    +Parada(String nombre)
+    +Parada(String nombre, String alias)
+    +getNombre() :String
+    +setNombre(String nombre) : void
+    +getAlias() : String
+    +setAlias(String alias) : void
+    +toString() :String
+}
+
+class Linea #LightSalmon {
+    -nombre : String
+    --
+    +Linea(str nombre)
+    +getNombre() : String
+    +setNombre() : void
+    +getParadas() : String[]
+    +agregarParada(Parada parada) : boolean
+    +removerParada(int i) : void
+    +buscarParadaPorNombre(String nombreParada) : int
+    +buscarParadaPorAlias(String aliasParada) : int
+    +vaciar() : void
+}
+
+class Red #LightSalmon{
+    -nombre : String
+    -datosRedArchivo : DatosRedArchivo
+    -jsonRedParser : JsonRedParser
+    -grafo : Grafo
+    --
+    +Red()
+    +Red(String nombreArchivo)
+    +getNombre() : String
+    +setNombre(String nombre) : void
+    +getNombreArchivo() : String
+    +setNombreArchivo(String nombreArchivo) : void
+    +getGrafo() : Grafo
+    +setGrafo(Grafo grafo) : void
+    +getNombreLineas() : String[]
+    +getParadasLinea(int index) : String[]
+    +agregarLinea(Linea linea) : boolean
+    +agregarLinea(String nombreLinea) : boolean
+    +agregarParada(String nombreLinea, String nombreParada) : boolean
+    +agregarParadas(String nombreLinea, String[] paradas) : boolean
+    +removerLinea(int index) : void
+    +buscarLineaPorNombre(String nombreLinea) : int
+    +vaciarRed() : void
+    +cargarArchivo() : boolean
+    +cargarArchivo(String nombreArchivo) : boolean
+    +cargarGrafo() : void
+    +getT() : int
+    +setT(int t) : void
+    +agregarSucursal(String nombre) : boolean
+    +removerSucursal(String nombre) : boolean
+    +getSucursales() : String[]
+    +setSucursales(String[] sucursales) : boolean
+    +vaciarSucursales() : void
+    +public toString() : String
+    +grafoToString() : String
+}
+
+enum TipoBusqueda #LightCyan {
+    BFS
+    DFS
+}
+
+class Grafo #LightSalmon{
+    -MAX_NUM_SOLUCIONES : int
+    -vertices : ArrayList<Vertice>
+    -sucursales : ArrayList<String>
+    -t : int
+    -tipoBusqueda : TipoBusqueda
+    --
+    +Grafo()
+    +getT() : int
+    +setT(int t) : void
+    +getTipoBusqueda() : TipoBusqueda
+    +setTipoBusqueda(TipoBusqueda tipoBusqueda) : void
+    +getVerticesSize() : int
+    +getSucursalesSize() : int
+    +buscarVertice(String nombre) : Vertice
+    +buscarVertice(Vertice vertice) : Vertice
+    +agregarVertice(String nombre) : Vertice
+    +getVertice(int index) : Vertice
+    +getVertices() : String[]
+    +agregarAdyacente(String verticeOrigen, String verticeDestino, int peso) : boolean
+    +agregarAdyacente(Vertice verticeOrigen, Vertice verticeDestino, int peso) : boolean
+    +buscarSucursal(String nombre) : int
+    +agregarSucursal(String nombre) : boolean
+    +removerSucursal(String nombre) : boolean
+    +getSucursales() : String[]
+    +setSucursales(String[] sucursales) : boolean
+    +vaciarSucursales() : void
+    +recorrerPorAmplitud(String nombreVertice, boolean usarT) : Visitado[]
+    +recorrerPorProfundidad(String nombreVertice, boolean usarT) : Visitado[]
+    #visitadosToString(Visitado[] visitados) : String
+    +esConexo() : boolean
+    +asignarCobertura(String nombreVertice) : void
+    +asignarCoberturas() : void
+    +getCoberturaTotal() : String[]
+    +hayCoberturaTotal() : boolean
+    -calcularSucursales(ArrayList<String> sucursales, Set<String> verticesSet, ArrayList<ArrayList<String>> resultados) : void
+    +recomendarSucursales() : String[]
+    +vaciar() : void
+    +toString() : String
+}
+
+interface IRed #LightBlue{
+    getNombre() : String
+    setNombre(String nombre) : void
+    getNombreArchivo() : String
+    setNombreArchivo(String nombreArchivo) : void
+    getGrafo() : Grafo
+    setGrafo(Grafo grafo) : void
+    getNombreLineas() : String[]
+    getParadasLinea(int index) : String[]
+    agregarLinea(Linea linea) : boolean
+    agregarLinea(String nombreLinea) : boolean
+    agregarParada(String nombreLinea, String nombreParada) : boolean
+    agregarParadas(String nombreLinea, String[] paradas) : boolean
+    removerLinea(int index) : void
+    buscarLineaPorNombre(String nombreLinea) : int
+    vaciarRed() : void
+    cargarArchivo() : boolean
+    cargarArchivo(String nombreArchivo) : boolean
+    cargarGrafo() : void
+    getT() : int
+    setT(int t) : void
+    agregarSucursal(String nombre) : boolean
+    removerSucursal(String nombre) : boolean
+    getSucursales() : String[]
+    setSucursales(String[] sucursales) : boolean
+    vaciarSucursales() : void
+    public toString() : String
+    grafoToString() : String
+}
+
+IRed *-down- Red
+Red "1" *-right- "*" Linea
+Linea "1" *-right- "*" Parada
+Vertice "1" o-down- "*" Adyacente
+Vertice "1" o-down- "*" Visitado
+Grafo "1" *-down- "*" Vertice
+Red "1" *-left- "1" Grafo
+note right of TipoBusqueda: Este enum se encarga de definir \nel tipo de búsqueda a realizar en el grafo
+
+
+@enduml
