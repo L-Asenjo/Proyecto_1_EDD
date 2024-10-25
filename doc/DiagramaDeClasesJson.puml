@@ -1,0 +1,51 @@
+@startuml
+
+title Diagrama de Clases Proyecto #1 (Json)
+skinparam ClassAttributeIconSize 0
+
+interface IRedParser #LightBlue {
+    --
+    getNombreRed() : String
+    getNombresLineas() : String[]
+    getNombresParadas() : String[][]
+    setJson(String json) : void
+    parse() : void
+    parse(String json) : void
+    toString() : String
+}
+
+class JsonRedParser #LightPink {
+    -nombreRed : String
+    -nombresLineas : String[]
+    -nombreParadas : String[][]
+    -json: String
+    --
+    +JsonRedParser()
+    +JsonRedParser(String json)
+    +getNombreRed() : String
+    +getNombresLineas() : String[]
+    +getNombreParadas() : String[][]
+    +setJson(String json) : void
+    stripTotal() : void
+    obtenerRed() : void
+    depurarLineas() : void
+    obtenerLineas() : void
+    +parse() : void
+    +parse(String json) : void
+    +toString() : String
+}
+
+class DatosRedArchivo #LightPink {
+    nombreArchivo : String
+    --
+    +DatosRedArchivo()
+    +DatosRedArchivo(String nombreArchivo) 
+    +getNombreArchivo() : String
+    +setNombreArchivo(String nombreArchivo) : void
+    +ObtenerDatos() : String
+    +ObtenerDatos(String nombreArchivo) : String
+}
+
+IRedParser *-down- JsonRedParser
+
+@enduml
