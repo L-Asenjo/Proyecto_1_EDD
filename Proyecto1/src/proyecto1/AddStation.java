@@ -39,10 +39,12 @@ public class AddStation extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        Add = new javax.swing.JButton();
         SelectLinea = new javax.swing.JComboBox<>();
         SelectAdyacente = new javax.swing.JComboBox<>();
         SelectAdyacente2 = new javax.swing.JComboBox<>();
+        StationName = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -57,8 +59,13 @@ public class AddStation extends javax.swing.JFrame {
         });
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(337, 20, 40, -1));
 
-        jButton2.setText("Agregar");
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 240, 100, 30));
+        Add.setText("Agregar");
+        Add.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AddActionPerformed(evt);
+            }
+        });
+        jPanel1.add(Add, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 240, 100, 30));
 
         SelectLinea.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         SelectLinea.addActionListener(new java.awt.event.ActionListener() {
@@ -83,6 +90,17 @@ public class AddStation extends javax.swing.JFrame {
             }
         });
         jPanel1.add(SelectAdyacente2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 80, 110, 30));
+
+        StationName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                StationNameActionPerformed(evt);
+            }
+        });
+        jPanel1.add(StationName, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 170, 200, 30));
+
+        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel1.setText("Nombre de la Parada");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -113,13 +131,20 @@ public class AddStation extends javax.swing.JFrame {
         Linea l = this.mainClass.red.get(mainClass.red.buscarLineaPorNombre((String) SelectLinea.getSelectedItem()));
         Parada p = l.get(l.buscarParadaPorNombre((String)this.SelectAdyacente.getSelectedItem()));
         this.SelectAdyacente2.addItem(l.get(l.buscarParadaPorNombre(p.getNombre())-1).getNombre());
-        this.SelectAdyacente2.addItem(l.get(l.buscarParadaPorNombre(p.getNombre())-1).getNombre());   
-
+        this.SelectAdyacente2.addItem(l.get(l.buscarParadaPorNombre(p.getNombre())+1).getNombre());   
     }//GEN-LAST:event_SelectAdyacenteActionPerformed
 
     private void SelectAdyacente2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SelectAdyacente2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_SelectAdyacente2ActionPerformed
+
+    private void StationNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StationNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_StationNameActionPerformed
+
+    private void AddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AddActionPerformed
+        this.mainClass.red.agregarParada((String)SelectLinea.getSelectedItem(), StationName.getText());
+    }//GEN-LAST:event_AddActionPerformed
 
     /**
      * @param args the command line arguments
@@ -157,11 +182,13 @@ public class AddStation extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Add;
     private javax.swing.JComboBox<String> SelectAdyacente;
     private javax.swing.JComboBox<String> SelectAdyacente2;
     private javax.swing.JComboBox<String> SelectLinea;
+    private javax.swing.JTextField StationName;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }
